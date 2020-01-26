@@ -1,12 +1,13 @@
 import React from 'react';
 import './App.css';
 import MapContainer from './map.js';
+import { heatMapData } from 'google-maps-react';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <MapContainer/>
+        <MapContainer />
       </header>
     </div>
   );
