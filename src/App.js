@@ -164,6 +164,7 @@ class App extends React.Component  {
               onUploadError={this.handleUploadError}
               onUploadSuccess={this.handleUploadSuccess}
               onProgress={this.handleProgress}
+              onClick={this.handleSOS}
             />
           </label>
         </form>
