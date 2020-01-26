@@ -1,8 +1,9 @@
-#map{
-          width: auto;
-          height: 500px;
-
+#main-map{
+  @media screen and (max-width: 480px){
+    width: 350px;
+  }
 }
+
 
 #report-label {
   position: absolute;
