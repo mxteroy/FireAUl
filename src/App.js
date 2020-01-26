@@ -55,10 +55,8 @@ const lblStyle =
 }
 
 class App extends React.Component  {
-  
   constructor() {
     super()
-
     this.state = {
         latitude: '',
         longitude: '',
@@ -70,17 +68,13 @@ class App extends React.Component  {
         phone: "",
         name: ""
     }
-
     this.getMyLocation = this.getMyLocation.bind(this)
     }
-    
     componentDidMount() {
       this.getMyLocation()
     }
-
     getMyLocation() {
     const location = window.navigator && window.navigator.geolocation
-    
     if (location) {
         location.getCurrentPosition((position) => {
         this.setState({
@@ -91,41 +85,30 @@ class App extends React.Component  {
         this.setState({ latitude: 'err-latitude', longitude: 'err-longitude' })
         })
     }
-
     }
-
   handleSOS=e=> {
-    
     let ref = fire.database().ref('SOS');
-    
     var info = {
       latitude: this.state.latitude,
       longtitude: this.state.longitude,
       phone: this.state.phone,
       name: this.state.name
     }
-
     ref.push(info);
-
     this.setState(
       {
         latitude: this.state.latitude,
         longtitude: this.state.longitude
       }
     )        
-    
   }
-
   handleReport=e=>{
     var fileName = this.state.fileName;
-    
-
     // if (this.state.isUploading) {
     //   setTimeout(500); // setTimeout(func, timeMS, params...)
     // }
-    
     if (fileName.length){
-    const url = "http://3.82.242.180:5000/report?filename=" + fileName; // site that doesn’t send Access-Control-*
+    const url = "http://3.82.242.180:5000/report?filename=" + fileName; // site that doesn't send Access-Control-*
     fetch(url).then((resp) => resp.json())
       .then(function(data) {
           console.log(data);
@@ -136,26 +119,19 @@ class App extends React.Component  {
     }
     this.setState({fileName: ""})
   }
-
   handleChangeUsername = event =>
     this.setState({ username: event.target.value });
-
   handleUploadStart = () => this.setState({ isUploading: true, progress: 0 });
-
   handleProgress = progress => this.setState({ progress });
-
   handleUploadError = error => {
     this.setState({ isUploading: false });
     console.error(error);
   };
-
   handleFileName =file=> {
     var file_name = file.name;
     this.setState({fileName: file_name});
-    
     return file_name;
   }
-
   handleUploadSuccess = filename => {
     this.setState({ avatar: filename, progress: 100, isUploading: false });
     fire
@@ -164,8 +140,7 @@ class App extends React.Component  {
       .child(filename)
       .getDownloadURL()
       .then(url => this.setState({ avatarURL: url }));
-
-      const url = "http://3.82.242.180:5000/report?filename=" + filename; // site that doesn’t send Access-Control-*
+      const url = "http://3.82.242.180:5000/report?filename=" + filename; // site that doesn't send Access-Control-*
     fetch(url).then((resp) => resp.json())
       .then(function(data) {
           console.log(data);
@@ -174,7 +149,6 @@ class App extends React.Component  {
           console.log(error);
       }); 
   };
-
   handleName =e=> {
     this.setState({ name: e.target.value });
   }
@@ -182,15 +156,15 @@ class App extends React.Component  {
   render () {
     return (
       <div className="App" >
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#" style={lblStyle}>FireAUl</a>
+  <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <a className="navbar-brand" href="#" style={lblStyle}>FireAUl</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-item nav-link" type="button" data-toggle="modal" data-target="#AboutUsLabel">About</a>
+              <a className="nav-item nav-link" type="button" data-toggle="modal" data-target="#AboutUsLabel">About</a>
               <div class="modal fade" id="AboutUsLabel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
