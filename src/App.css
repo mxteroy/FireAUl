@@ -3,3 +3,33 @@
           height: 500px;
 
 }
+
+#report-label {
+  position: absolute;
+  left: 35%;
+  width: 30%;
+  height: 75px;
+  top: 0px;
+  fontFamily: Roboto;
+  fontSize: 55px;
+  borderRadius: 20px;
+  backgroundColor: #A9A9A9;
+  color: #A9A9A9;
+  opacity: 0;
+}
+#report{
+  position: absolute;
+
+  left: 35%;
+  width: 30%;
+  height: 75px;
+  top: 735px;
+  fontFamily: Roboto;
+  fontSize: 55px;
+  borderRadius: 20px;
+  backgroundColor: #D3D3D3;
+  color: white;
+}
+body {
+	background-color: #E0E0E0;
+}
