@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 
 const mapStyles = {
   map: {
+    text-align = 'center',
     position: 'absolute',
-    width: '100%',
-    height: '100%'
+    width: '900px',
+    height: '450px'
   }
 };
 
