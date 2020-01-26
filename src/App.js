@@ -2,8 +2,6 @@ import React from 'react';
 import './App.css';
 import MapContainer from './map.js';
 import Button from '@material-ui/core/Button';
-import FormLabel from '@material-ui/core/FormLabel';
-import Link from '@material-ui/core/Link';
 import Input from 'react-phone-number-input/input';
 import fire from './fire';
 import FileUploader from "react-firebase-file-uploader";
@@ -26,7 +24,7 @@ const btnSOSStyles =
 const btnReportStyles =
 {
   left: '25%',
-  width: '50%',
+  width: '500',
   height: '100px',
   top: '50px',
   fontFamily: 'Roboto',
@@ -68,7 +66,9 @@ class App extends React.Component  {
         isUploading: false,
         progress: 0,
         avatarURL: "",
-        fileName: ""
+        fileName: "",
+        phone: "",
+        name: ""
     }
 
     this.getMyLocation = this.getMyLocation.bind(this)
@@ -95,23 +95,46 @@ class App extends React.Component  {
     }
 
   handleSOS=e=> {
+    
     let ref = fire.database().ref('SOS');
     
     var info = {
       latitude: this.state.latitude,
-      longtitude: this.state.longitude
+      longtitude: this.state.longitude,
+      phone: this.state.phone,
+      name: this.state.name
     }
 
     ref.push(info);
 
     this.setState(
       {
-        phone: this.state.latitude,
-        course: this.state.latitude,
-        courseNo: this.state.latitude,
-        CRN: this.state.latitude
+        latitude: this.state.latitude,
+        longtitude: this.state.longitude
       }
-    )
+    )        
+    
+  }
+
+  handleReport=e=>{
+    var fileName = this.state.fileName;
+    
+
+    // if (this.state.isUploading) {
+    //   setTimeout(500); // setTimeout(func, timeMS, params...)
+    // }
+    
+    if (fileName.length){
+    const url = "http://3.82.242.180:5000/report?filename=" + fileName; // site that doesn’t send Access-Control-*
+    fetch(url).then((resp) => resp.json())
+      .then(function(data) {
+          console.log(data);
+      })
+      .catch(function(error) {
+          console.log(error);
+      }); 
+    }
+    this.setState({fileName: ""})
   }
 
   handleChangeUsername = event =>
@@ -127,8 +150,10 @@ class App extends React.Component  {
   };
 
   handleFileName =file=> {
-    this.setState({fileName: file.name.split('.')[0] + file.name.split('.')[1]});
-    return file.name.split('.')[0] + file.name.split('.')[1];
+    var file_name = file.name;
+    this.setState({fileName: file_name});
+    
+    return file_name;
   }
 
   handleUploadSuccess = filename => {
@@ -139,7 +164,20 @@ class App extends React.Component  {
       .child(filename)
       .getDownloadURL()
       .then(url => this.setState({ avatarURL: url }));
+
+      const url = "http://3.82.242.180:5000/report?filename=" + filename; // site that doesn’t send Access-Control-*
+    fetch(url).then((resp) => resp.json())
+      .then(function(data) {
+          console.log(data);
+      })
+      .catch(function(error) {
+          console.log(error);
+      }); 
   };
+
+  handleName =e=> {
+    this.setState({ name: e.target.value });
+  }
 
   render () {
     return (
@@ -260,23 +298,9 @@ So, if you have any doubt about any of these factors, you must be safe and leave
 
         <div className="container" style={{display: 'inline-block', width: '100px', height: '100px'}}>
             <MapContainer/>
-
-          <form>
-          <label style={btnSOSStyles}>
+            <Button variant="contained" style={btnSOSStyles}  data-toggle="modal" data-target="#exampleModalLong">
             SOS
-            <FileUploader
-              hidden
-              accept="image/*"
-              filename={this.handleFileName}
-              storageRef={fire.storage().ref('images')}
-              onUploadStart={this.handleUploadStart}
-              onUploadError={this.handleUploadError}
-              onUploadSuccess={this.handleUploadSuccess}
-              onProgress={this.handleProgress}
-              onClick={this.handleSOS}
-            />
-          </label>
-        </form>
+          </Button>
     
         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -288,41 +312,46 @@ So, if you have any doubt about any of these factors, you must be safe and leave
                 </button>
               </div>
               <div class="modal-body">
-                <form>
+                <form onSubmit={this.handleSOS}>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Phone Number</label>
                     <Input
                       class="form-control"
                       placeholder="e.g. (123) 456-7890"
                       country="US"
-
-                      onChange={phone => 555} required />
+                      value={this.state.phone}
+                      onChange={phone => this.setState({ phone: phone })}/>
                     <br />
-                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                  </div>
-                  <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    <label for="exampleInputEmail1">Name</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="e.g. John Doe" value={this.state.name} onChange={this.handleName}/>
                   </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
               </div>
             </div>
           </div>
         </div>
         
-          <Button variant="contained" style={btnReportStyles}  data-toggle="modal" data-target="#exampleModalLong">
-            Report
-          </Button>
+          
+
+          <form>
+            <label style={btnReportStyles}>
+              Report
+              <FileUploader
+                hidden
+                accept="image/*"
+                filename={this.handleFileName}
+                storageRef={fire.storage().ref('images')}
+                onUploadStart={this.handleUploadStart}
+                onUploadError={this.handleUploadError}
+                onUploadSuccess={this.handleUploadSuccess}
+                onProgress={this.handleProgress}
+                onClick={this.handleReport}
+              />
+            </label>
+          </form>
         </div>
       </div>
     );
